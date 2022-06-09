@@ -24,7 +24,7 @@ module moulding() {
   }
 }
 
-module pegwell() {
+module peg_well() {
     intersection() {
       rotate([0,-90, 0]) linear_extrude(peg_diam*2, center=true)
         mirror([0,1]) import("moulding.svg");
@@ -47,10 +47,10 @@ module edge(length) {
         polygon([[-length/2,0], [length/2,0], [0, length/2]]);
     }
     if (length > 200) {
-      translate([-50,0,0]) pegwell(); 
-      translate([50,0,0]) pegwell(); 
+      translate([-50,0,0]) peg_well(); 
+      translate([50,0,0]) peg_well(); 
     } else {
-      pegwell();
+      peg_well();
     }
   }
 }
