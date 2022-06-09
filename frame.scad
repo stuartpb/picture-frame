@@ -2,13 +2,16 @@ picture_height = 144;
 picture_width = 188;
 
 mould_width = 18;
+mould_thickness = 2;
 
 inset_width = 7;
-inset_depth = 3;
+inset_depth = 5;
 
-retainer_peg_diam = 6;
-retainer_peg_depth = 6;
-retainer_peg_play = 0;
+peg_diam = 6;
+peg_depth = 6;
+peg_foot_thickness = 2;
+peg_well_wall_thickness = 2;
+peg_wall_thickness= 1.5;
 
 $fs=0.1;
 
@@ -16,19 +19,39 @@ module moulding() {
   mirror([0,1])
   difference() {
     import("moulding.svg");
-    square([inset_depth, inset_width]);
+    offset(delta=-mould_thickness) import("moulding.svg");
+    square([inset_depth, mould_width-mould_thickness]);
   }
 }
 
+module pegwell() {
+    intersection() {
+      rotate([0,-90, 0]) linear_extrude(peg_diam*2, center=true)
+        mirror([0,1]) import("moulding.svg");
+      translate([0,-(mould_width + inset_width)/2,peg_foot_thickness]) difference() {
+        cylinder(h=mould_width, d=peg_diam + 2*peg_well_wall_thickness);
+        cylinder(h=mould_width*2, d=peg_diam, center=true);
+      }
+    }
+}
+
+module peg() {
+  
+}
+
 module edge(length) {
-  difference() {
+  union() {
     intersection() {
       rotate([0,-90, 0]) linear_extrude(length, center=true) moulding();
       linear_extrude(mould_width) translate([0, -mould_width])
         polygon([[-length/2,0], [length/2,0], [0, length/2]]);
     }
-    translate([0,-(mould_width + inset_width)/2])
-      cylinder(h=retainer_peg_depth*2, d=retainer_peg_diam+retainer_peg_play, center=true);
+    if (length > 200) {
+      translate([-50,0,0]) pegwell(); 
+      translate([50,0,0]) pegwell(); 
+    } else {
+      pegwell();
+    }
   }
 }
 
