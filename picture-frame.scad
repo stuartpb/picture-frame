@@ -10,8 +10,11 @@ inset_depth = 5;
 peg_diam = 6;
 peg_depth = 6;
 peg_foot_thickness = 2;
+peg_foot_width = 5.55;
+peg_foot_length = 13.5;
 peg_well_wall_thickness = 2;
-peg_wall_thickness= 1.5;
+peg_wall_thickness = 1.5;
+peg_wall_crack = 1.5;
 
 $fs=0.1;
 
@@ -36,7 +39,19 @@ module peg_well() {
 }
 
 module peg() {
-  
+  union () {
+    hull () {
+      cylinder(h=peg_foot_thickness,d=peg_foot_width);
+      translate([0,peg_foot_length-peg_foot_width,0])
+        cylinder(h=peg_foot_thickness,d=peg_foot_width);
+    }
+    difference() {
+      cylinder(d=peg_diam,h=peg_depth);
+      cylinder(d=peg_diam-2*peg_wall_thickness,h=peg_depth*3,center=true);
+      rotate([0,0,45]) translate([0,peg_diam/2,0])
+      cube([peg_wall_crack,peg_diam,peg_depth*3],center=true);
+    }
+  }
 }
 
 module edge(length) {
@@ -65,5 +80,5 @@ module frame() {
   translate ([0,-top_edge,0]) rotate([0,0,0]) edge(frame_width);
   translate ([-right_edge,0,0]) rotate([0,0,-90]) edge(frame_height);
 }
-frame();
-//moulding();
+//frame();
+peg();
