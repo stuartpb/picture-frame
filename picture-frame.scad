@@ -10,11 +10,13 @@ inset_depth = 5;
 peg_diam = 6;
 peg_depth = 6;
 peg_foot_thickness = 2;
-peg_foot_width = 5.55;
+peg_foot_width = 5.5;
 peg_foot_length = 13.5;
 peg_well_wall_thickness = 2;
 peg_wall_thickness = 1.5;
 peg_wall_crack = 1.5;
+peg_toe_height = 1;
+peg_toe_diam = 2.5;
 
 $fs = 0.1;
 
@@ -52,6 +54,8 @@ module peg() {
       rotate([ 0, 0, 45 ]) translate([ 0, peg_diam / 2, 0 ])
           cube([ peg_wall_crack, peg_diam, peg_depth * 3 ], center = true);
     }
+    translate([ 0, peg_foot_length - peg_foot_width, 0 ])
+        cylinder(h = peg_foot_thickness + peg_toe_height, d = peg_toe_diam);
   }
 }
 
