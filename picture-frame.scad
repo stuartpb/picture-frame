@@ -85,5 +85,35 @@ module frame() {
   translate([ 0, -top_edge, 0 ]) rotate([ 0, 0, 0 ]) edge(frame_width);
   translate([ -right_edge, 0, 0 ]) rotate([ 0, 0, -90 ]) edge(frame_height);
 }
-// frame();
-peg();
+
+module backing() {
+  width = picture_width + mould_width;
+  height = picture_height + mould_width;
+  peg_offset = (mould_width - inset_width) / 2;
+  module peg_cutout() {
+    circle(r=peg_foot_length);
+  }
+  module corner() {
+    square();
+  }
+  module cutouts() {
+    translate([ -50, -picture_height/2-peg_offset, 0 ]) peg_cutout();
+    translate([ -50, picture_height/2+peg_offset, 0 ]) peg_cutout();
+    translate([ 50, -picture_height/2-peg_offset, 0 ]) peg_cutout();
+    translate([ 50, picture_height/2+peg_offset, 0 ]) peg_cutout();
+    translate([ -picture_width/2-peg_offset, 0, 0 ]) peg_cutout();
+    translate([ picture_width/2+peg_offset, 0, 0 ]) peg_cutout();
+  }
+  linear_extrude(peg_foot_thickness) difference() {
+    square([width,height],center=true);
+    cutouts();
+  }
+  linear_extrude(inset_depth)  difference() {
+    square([width,height],center=true);
+    square([width-2*mould_thickness,height-2*mould_thickness],center=true);
+    cutouts();
+  }
+}
+%frame();
+%translate([50,-picture_height/2 -(mould_width - inset_width) / 2,0]) peg();
+backing();
